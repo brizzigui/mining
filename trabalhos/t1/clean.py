@@ -1,10 +1,28 @@
 import pandas as pd
 
-def read() -> pd.DataFrame:    
+def verify(row: dict) -> bool:
+    try:
+        summed = sum(int(row[key]) for key in ["men", "kote", "do", "tsuki"])
+        time = int(row["seconds_between"])
+        ippons = int(row["ippon_taken"])
+
+    except (ValueError, IndexError):
+        return False
+
+    if summed != 1 or time < 0 or time > 100 or ippons not in (0, 1):
+        return False
+    
+    return True
+
+def read() -> pd.DataFrame:   
     data = []
+    match_id = None
+    match_count = 2
     
     with open('kendo_matches_work.csv', 'r') as file:
         categories = file.readline().strip().split(",")
+        useful_categories = ["seconds_between", "ippon_taken", "men", "kote", "do", "tsuki"]
+
         for line in file:
             values = line.strip().split(",")
 
@@ -12,23 +30,26 @@ def read() -> pd.DataFrame:
                 continue
 
             row = dict(zip(categories, values))
+            
+            if verify(row):
+                if match_id != row["match_id"]:
+                    match_count = 2
 
-            try:
-                summed = sum(int(values[i]) for i in range(5, 9))
-                time = int(row["seconds_between"])
-                ippons = int(row["ippon_taken"])
-            except (ValueError, IndexError):
-                continue
+                if match_count > 0:
+                    if match_id != row["match_id"]:
+                        val = {f"{key}_1": row[key] for key in useful_categories}
+                        match_id = row["match_id"] 
 
-            if summed != 1 or time < 0 or time > 100 or ippons not in (0, 1):
-                continue
+                    else:
+                        row = {f"{key}_2": row[key] for key in useful_categories}
+                        data.append(val | row) 
 
-            data.append(row)
+                    match_count -= 1
+
     
     df = pd.DataFrame(data, columns=[
-        "match_id", "ippon_number", "seconds_between", "ippon_taken", "men", "kote", "do", "tsuki"
+        *data[0].keys()
     ])
-    df = df.drop_duplicates()
     df.to_csv('cleaned.csv', index=False)
     
     return df
