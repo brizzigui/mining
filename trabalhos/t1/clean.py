@@ -138,18 +138,47 @@ def slow_attacks(data: dict) -> pd.DataFrame:
 
     print(rules)
 
+def failed_slow_attacks(data: dict) -> pd.DataFrame:
+    lhs = ["slow_attacks"]
+    rhs = ["failed_men_2", "failed_kote_2", "failed_do_2", "failed_tsuki_2"]
+
+    df= []
+    for val in data:
+        row = {
+            "slow_attacks": val["seconds_between_1"] > 15 and val["seconds_between_2"] > 25,
+            "failed_men_2": bool(val["men_2"]) and not bool(val["ippon_taken_2"]),
+            "failed_kote_2": bool(val["kote_2"]) and not bool(val["ippon_taken_2"]),
+            "failed_do_2": bool(val["do_2"]) and not bool(val["ippon_taken_2"]),
+            "failed_tsuki_2": bool(val["tsuki_2"]) and not bool(val["ippon_taken_2"]),
+        }
+        df.append(row)
+
+    df = pd.DataFrame(df)
+
+    sets = apriori(df, min_support=0.01, use_colnames=True)
+    rules = association_rules(sets, metric="confidence", min_threshold=0.01)
+
+    rules = rules[
+        (rules['antecedents'].apply(lambda x: set(x) == set(lhs))) &
+        (rules['consequents'].apply(lambda x: len(x) == 1 and list(x)[0] in rhs))
+    ].sort_values(by="confidence", ascending=False)
+
+    print(rules)
+    return rules
+
 
 def mine(data: dict) -> None:
     # for question 1
-    attack_implies_in_not(data)
+    #attack_implies_in_not(data)
 
     # for question 2
-    print(f"Confidence = {men_implies_ippon(data)}")
+    #print(f"Confidence = {men_implies_ippon(data)}")
 
     # for question 3
-    slow_attacks(data)
+    #slow_attacks(data)
 
     # for question 4
+    failed_slow_attacks(data)
 
 def main() -> None:
     data = read()
