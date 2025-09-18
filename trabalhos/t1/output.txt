@@ -1,0 +1,31 @@
+==================================================
+Questão 1: golpe implica não uso de outro golpe
+==================================================
+  antecedents consequents  antecedent support  consequent support   support  confidence      lift  representativity  leverage  conviction  zhangs_metric   jaccard  certainty  kulczynski
+0     (men_1)   (tsuki_2)            0.464646            0.919192  0.434343    0.934783  1.016961               1.0  0.007244    1.239057       0.031154  0.457447   0.192935    0.703655
+1      (do_1)      (do_2)            0.161616            0.828283  0.161616    1.000000  1.207317               1.0  0.027752         inf       0.204819  0.195122   1.000000    0.597561
+2      (do_1)   (tsuki_2)            0.161616            0.919192  0.151515    0.937500  1.019918               1.0  0.002959    1.292929       0.023293  0.163043   0.226562    0.551168
+3   (tsuki_1)    (kote_2)            0.020202            0.727273  0.020202    1.000000  1.375000               1.0  0.005510         inf       0.278351  0.027778   1.000000    0.513889
+4   (tsuki_1)      (do_2)            0.020202            0.828283  0.020202    1.000000  1.207317               1.0  0.003469         inf       0.175258  0.024390   1.000000    0.512195
+5   (tsuki_1)   (tsuki_2)            0.020202            0.919192  0.020202    1.000000  1.087912               1.0  0.001632         inf       0.082474  0.021978   1.000000    0.510989
+
+==================================================
+Questão 2: confiança, atleta que aplicou men levou ippon
+==================================================
+0.4827586206896552
+
+==================================================
+Questão 3: segundo golpe lento
+==================================================
+  antecedents consequents  antecedent support  consequent support   support  confidence      lift  representativity  leverage  conviction  zhangs_metric   jaccard  certainty  kulczynski
+0   (tsuki_2)    (over25)            0.080808            0.747475  0.070707       0.875  1.170608               1.0  0.010305    2.020202       0.158556  0.093333      0.505    0.484797
+
+==================================================
+Questão 4: segundo golpe lento falhou
+==================================================
+      antecedents       consequents  antecedent support  consequent support   support  confidence      lift  representativity  leverage  conviction  zhangs_metric   jaccard  certainty  kulczynski
+1  (slow_attacks)    (failed_men_2)            0.494949            0.272727  0.181818    0.367347  1.346939               1.0  0.046832    1.149560       0.510000  0.310345   0.130102    0.517007
+3  (slow_attacks)   (failed_kote_2)            0.494949            0.161616  0.060606    0.122449  0.757653               1.0 -0.019386    0.955368      -0.387755  0.101695  -0.046717    0.248724
+5  (slow_attacks)     (failed_do_2)            0.494949            0.101010  0.030303    0.061224  0.606122               1.0 -0.019692    0.957620      -0.562682  0.053571  -0.044256    0.180612
+7  (slow_attacks)  (failed_tsuki_2)            0.494949            0.060606  0.020202    0.040816  0.673469               1.0 -0.009795    0.979368      -0.489796  0.037736  -0.021066    0.187075
+

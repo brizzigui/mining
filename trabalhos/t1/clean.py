@@ -1,6 +1,20 @@
 import pandas as pd
 from mlxtend.frequent_patterns import apriori, association_rules
 
+def write_output(header: str, data, append: bool = True) -> None:
+    mode = 'a' if append else 'w'
+    with open('output.txt', mode, encoding='utf-8') as file:
+        file.write(f"{'='*50}\n")
+        file.write(f"{header}\n")
+        file.write(f"{'='*50}\n")
+        
+        if isinstance(data, pd.DataFrame):
+            file.write(data.to_string())
+            file.write("\n\n")
+        elif isinstance(data, (int, float, str)):
+            file.write(str(data))
+            file.write("\n\n")
+
 def verify(row: dict) -> bool:
     try:
         summed = sum(int(row[key]) for key in ["men", "kote", "do", "tsuki"])
@@ -82,11 +96,6 @@ def attack_implies_in_not(data: dict) -> pd.DataFrame:
         rules['consequents'].apply(lambda x: list(x)[0] in rhs)
     ]
 
-    print()
-    print("Strongest rule a->!b in attacks:\n(highest support, above threshold confidence)\n")
-    print(rules.iloc[0])
-    print()
-
     return rules
 
 def men_implies_ippon(data: dict) -> float:
@@ -105,8 +114,6 @@ def men_implies_ippon(data: dict) -> float:
 
     sets = apriori(df, min_support=0.01, use_colnames=True)   
     rules = association_rules(sets, metric="confidence", min_threshold=0.01).sort_values(by="support", ascending=False)
-
-    print(rules)
 
     return rules.iat[0, 5]
 
@@ -136,7 +143,7 @@ def slow_attacks(data: dict) -> pd.DataFrame:
         rules['consequents'].apply(lambda x: list(x)[0] in rhs)
     ]
 
-    print(rules)
+    return rules
 
 def failed_slow_attacks(data: dict) -> pd.DataFrame:
     lhs = ["slow_attacks"]
@@ -163,22 +170,24 @@ def failed_slow_attacks(data: dict) -> pd.DataFrame:
         (rules['consequents'].apply(lambda x: len(x) == 1 and list(x)[0] in rhs))
     ].sort_values(by="confidence", ascending=False)
 
-    print(rules)
     return rules
-
 
 def mine(data: dict) -> None:
     # for question 1
-    #attack_implies_in_not(data)
+    q1 = attack_implies_in_not(data)
+    write_output("Questão 1: golpe implica não uso de outro golpe", q1, append=False)
 
     # for question 2
-    #print(f"Confidence = {men_implies_ippon(data)}")
+    q2 = men_implies_ippon(data)
+    write_output("Questão 2: confiança, atleta que aplicou men levou ippon", q2)
 
     # for question 3
-    #slow_attacks(data)
+    q3 = slow_attacks(data)
+    write_output("Questão 3: segundo golpe lento", q3)
 
     # for question 4
-    failed_slow_attacks(data)
+    q4 = failed_slow_attacks(data)
+    write_output("Questão 4: segundo golpe lento falhou", q4)
 
 def main() -> None:
     data = read()
