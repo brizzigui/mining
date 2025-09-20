@@ -172,7 +172,55 @@ def failed_slow_attacks(data: dict) -> pd.DataFrame:
 
     return rules
 
-def consecutive_blows(data: dict) -> float:
+def first_attack(data: dict) -> float:
+    lhs = ["ippon_taken_1"]
+    rhs = ["not_ippon_taken_2"]
+
+    df = []
+    for val in data:
+        row = {
+            "ippon_taken_1": bool(val["ippon_taken_1"]),
+            "not_ippon_taken_2": not bool(val["ippon_taken_2"]),
+        }
+        df.append(row)
+    
+    df = pd.DataFrame(df)
+
+    sets = apriori(df, min_support=0.01, use_colnames=True)
+    rules = association_rules(sets, metric="confidence", min_threshold=0.01)
+
+    rules = rules[
+        (rules['antecedents'].apply(lambda x: set(x) == set(lhs))) &
+        (rules['consequents'].apply(lambda x: set(x) == set(rhs)))
+    ].sort_values(by="confidence", ascending=False)
+
+    return rules.iat[0, 5]
+
+def second_attack(data: dict) -> float:
+    lhs = ["not_ippon_taken_1"]
+    rhs = ["ippon_taken_2"]
+
+    df = []
+    for val in data:
+        row = {
+            "not_ippon_taken_1": not bool(val["ippon_taken_1"]),
+            "ippon_taken_2": bool(val["ippon_taken_2"]),
+        }
+        df.append(row)
+    
+    df = pd.DataFrame(df)
+
+    sets = apriori(df, min_support=0.01, use_colnames=True)
+    rules = association_rules(sets, metric="confidence", min_threshold=0.01)
+
+    rules = rules[
+        (rules['antecedents'].apply(lambda x: set(x) == set(lhs))) &
+        (rules['consequents'].apply(lambda x: set(x) == set(rhs)))
+    ].sort_values(by="confidence", ascending=False)
+
+    return rules.iat[0, 5]
+
+def consecutive_blows(data:dict) -> float:
     lhs = ["ippon_taken_1"]
     rhs = ["ippon_taken_2"]
 
@@ -196,34 +244,6 @@ def consecutive_blows(data: dict) -> float:
 
     return rules.iat[0, 5]
 
-def get_antedecent(rule) -> str:
-    return list(rule)[0]
-
-def follow_up_attack(data: dict) -> pd.DataFrame:
-    lhs = ["men_1", "kote_1", "do_1", "tsuki_1"]
-    rhs = ["men_2", "kote_2", "do_2", "tsuki_2"]
-
-    df = []
-    for val in data:
-        row = {key: bool(val[key]) for key in lhs + rhs}
-        df.append(row)
-
-    df = pd.DataFrame(df)
-
-    sets = apriori(df, min_support=0.01, use_colnames=True)
-    rules = association_rules(sets, metric="confidence", min_threshold=0.01)
-
-    rules = rules[
-        (rules['antecedents'].apply(lambda x: len(x) == 1 and list(x)[0] in lhs)) &
-        (rules['consequents'].apply(lambda x: len(x) == 1 and list(x)[0] in rhs))
-    ].sort_values(by="confidence", ascending=False)
-
-    rules = rules.sort_values('confidence', ascending=False).groupby(
-        rules['antecedents'].apply(get_antedecent)
-    ).head(1)
-
-    return rules
-
 def mine(data: dict) -> None:
     # for question 1
     q1 = attack_implies_in_not(data)
@@ -241,11 +261,14 @@ def mine(data: dict) -> None:
     q4 = failed_slow_attacks(data)
     write_output("Questão 4: segundo golpe lento falhou", q4)
 
-    qb1 = consecutive_blows(data)
-    write_output("Bônus 1: ippon consecutivo", qb1)
+    qb1 = first_attack(data)
+    write_output("Bônus 1: segundo ataque falha se primeiro acerta", qb1)
 
-    qb2 = follow_up_attack(data)
-    write_output("Bônus 2: golpe de follow up", qb2)
+    qb2 = second_attack(data)
+    write_output("Bônus 2: segundo ataque acerta se primeiro falha", qb2)
+
+    qb3 = consecutive_blows(data)
+    write_output("Bônus 3: ippon consecutivo", qb3)
 
 def main() -> None:
     data = read()
