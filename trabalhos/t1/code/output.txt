@@ -13,8 +13,8 @@ Questão 1: golpe implica não uso de outro golpe
 Questão 2: confiança, atleta que aplicou men levou ippon
 ==================================================
      antecedents    consequents  antecedent support  consequent support   support  confidence      lift  representativity  leverage  conviction  zhangs_metric   jaccard  certainty  kulczynski
-0  (ippon_taken)          (men)            0.439394            0.469697  0.212121    0.482759  1.027809               1.0  0.005739    1.025253       0.048263  0.304348   0.024631    0.467186
-1          (men)  (ippon_taken)            0.469697            0.439394  0.212121    0.451613  1.027809               1.0  0.005739    1.022282       0.051020  0.304348   0.021796    0.467186
+0          (men)  (ippon_taken)            0.469697            0.439394  0.212121    0.451613  1.027809               1.0  0.005739    1.022282       0.051020  0.304348   0.021796    0.467186
+1  (ippon_taken)          (men)            0.439394            0.469697  0.212121    0.482759  1.027809               1.0  0.005739    1.025253       0.048263  0.304348   0.024631    0.467186
 
 ==================================================
 Questão 3: segundo golpe lento
@@ -27,21 +27,24 @@ Questão 4: segundo golpe lento falhou
 ==================================================
       antecedents    consequents  antecedent support  consequent support   support  confidence      lift  representativity  leverage  conviction  zhangs_metric   jaccard  certainty  kulczynski
 0  (slow_attacks)   (failed_men)            0.494949            0.212121  0.111111    0.224490  1.058309               1.0  0.006122    1.015949       0.109091  0.186441   0.015699    0.374150
-2  (slow_attacks)  (failed_kote)            0.494949            0.156566  0.060606    0.122449  0.782093               1.0 -0.016886    0.961123      -0.355532  0.102564  -0.040450    0.254773
+3  (slow_attacks)  (failed_kote)            0.494949            0.156566  0.060606    0.122449  0.782093               1.0 -0.016886    0.961123      -0.355532  0.102564  -0.040450    0.254773
 4  (slow_attacks)    (failed_do)            0.494949            0.060606  0.040404    0.081633  1.346939               1.0  0.010407    1.022896       0.510000  0.078431   0.022383    0.374150
 
 ==================================================
 Bônus 1: segundo ataque falha se primeiro acerta
 ==================================================
-0.4615384615384615
+           antecedents      consequents  antecedent support  consequent support   support  confidence      lift  representativity  leverage  conviction  zhangs_metric   jaccard  certainty  kulczynski
+1  (not_ippon_taken_1)  (ippon_taken_2)            0.525253             0.40404  0.242424    0.461538  1.142308               1.0  0.030201    1.106782       0.262411  0.352941    0.09648    0.530769
 
 ==================================================
 Bônus 2: segundo ataque acerta se primeiro falha
 ==================================================
-0.6595744680851064
+       antecedents          consequents  antecedent support  consequent support   support  confidence      lift  representativity  leverage  conviction  zhangs_metric   jaccard  certainty  kulczynski
+1  (ippon_taken_1)  (not_ippon_taken_2)            0.474747             0.59596  0.313131    0.659574  1.106744               1.0  0.030201    1.186869       0.183623  0.413333   0.157447    0.592499
 
 ==================================================
 Bônus 3: ippon consecutivo
 ==================================================
-0.5384615384615384
+           antecedents          consequents  antecedent support  consequent support   support  confidence     lift  representativity  leverage  conviction  zhangs_metric   jaccard  certainty  kulczynski
+1  (not_ippon_taken_1)  (not_ippon_taken_2)            0.525253             0.59596  0.282828    0.538462  0.90352               1.0 -0.030201    0.875421      -0.183623  0.337349  -0.142308    0.506519
 

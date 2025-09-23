@@ -203,8 +203,7 @@ def first_attack(data: dict) -> float:
         (rules['consequents'].apply(lambda x: set(x) == set(rhs)))
     ].sort_values(by="confidence", ascending=False)
 
-    print(rules)
-    return rules.iat[0, 5]
+    return rules
 
 def second_attack(data: dict) -> float:
     lhs = ["ippon_taken_1"]
@@ -228,9 +227,7 @@ def second_attack(data: dict) -> float:
         (rules['consequents'].apply(lambda x: set(x) == set(rhs)))
     ].sort_values(by="confidence", ascending=False)
 
-    print(rules)
-
-    return rules.iat[0, 5]
+    return rules
 
 def consecutive_blows(data:dict) -> float:
     lhs = ["not_ippon_taken_1"]
@@ -254,9 +251,7 @@ def consecutive_blows(data:dict) -> float:
         (rules['consequents'].apply(lambda x: set(x) == set(rhs)))
     ].sort_values(by="confidence", ascending=False)
 
-    print(rules)
-
-    return rules.iat[0, 5]
+    return rules
 
 def mine(data: dict) -> None:
     # for question 1
