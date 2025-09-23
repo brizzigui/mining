@@ -1,0 +1,47 @@
+==================================================
+Questão 1: golpe implica não uso de outro golpe
+==================================================
+  antecedents consequents  antecedent support  consequent support   support  confidence      lift  representativity  leverage  conviction  zhangs_metric   jaccard  certainty  kulczynski
+0     (men_1)   (tsuki_2)            0.464646            0.919192  0.434343    0.934783  1.016961               1.0  0.007244    1.239057       0.031154  0.457447   0.192935    0.703655
+1      (do_1)      (do_2)            0.161616            0.828283  0.161616    1.000000  1.207317               1.0  0.027752         inf       0.204819  0.195122   1.000000    0.597561
+2      (do_1)   (tsuki_2)            0.161616            0.919192  0.151515    0.937500  1.019918               1.0  0.002959    1.292929       0.023293  0.163043   0.226562    0.551168
+5   (tsuki_1)   (tsuki_2)            0.020202            0.919192  0.020202    1.000000  1.087912               1.0  0.001632         inf       0.082474  0.021978   1.000000    0.510989
+4   (tsuki_1)      (do_2)            0.020202            0.828283  0.020202    1.000000  1.207317               1.0  0.003469         inf       0.175258  0.024390   1.000000    0.512195
+3   (tsuki_1)    (kote_2)            0.020202            0.727273  0.020202    1.000000  1.375000               1.0  0.005510         inf       0.278351  0.027778   1.000000    0.513889
+
+==================================================
+Questão 2: confiança, atleta que aplicou men levou ippon
+==================================================
+     antecedents    consequents  antecedent support  consequent support   support  confidence      lift  representativity  leverage  conviction  zhangs_metric   jaccard  certainty  kulczynski
+0  (ippon_taken)          (men)            0.439394            0.469697  0.212121    0.482759  1.027809               1.0  0.005739    1.025253       0.048263  0.304348   0.024631    0.467186
+1          (men)  (ippon_taken)            0.469697            0.439394  0.212121    0.451613  1.027809               1.0  0.005739    1.022282       0.051020  0.304348   0.021796    0.467186
+
+==================================================
+Questão 3: segundo golpe lento
+==================================================
+  antecedents consequents  antecedent support  consequent support   support  confidence      lift  representativity  leverage  conviction  zhangs_metric   jaccard  certainty  kulczynski
+0   (tsuki_2)    (over25)            0.080808            0.747475  0.070707       0.875  1.170608               1.0  0.010305    2.020202       0.158556  0.093333      0.505    0.484797
+
+==================================================
+Questão 4: segundo golpe lento falhou
+==================================================
+      antecedents    consequents  antecedent support  consequent support   support  confidence      lift  representativity  leverage  conviction  zhangs_metric   jaccard  certainty  kulczynski
+0  (slow_attacks)   (failed_men)            0.494949            0.212121  0.111111    0.224490  1.058309               1.0  0.006122    1.015949       0.109091  0.186441   0.015699    0.374150
+2  (slow_attacks)  (failed_kote)            0.494949            0.156566  0.060606    0.122449  0.782093               1.0 -0.016886    0.961123      -0.355532  0.102564  -0.040450    0.254773
+4  (slow_attacks)    (failed_do)            0.494949            0.060606  0.040404    0.081633  1.346939               1.0  0.010407    1.022896       0.510000  0.078431   0.022383    0.374150
+
+==================================================
+Bônus 1: segundo ataque falha se primeiro acerta
+==================================================
+0.4615384615384615
+
+==================================================
+Bônus 2: segundo ataque acerta se primeiro falha
+==================================================
+0.6595744680851064
+
+==================================================
+Bônus 3: ippon consecutivo
+==================================================
+0.5384615384615384
+

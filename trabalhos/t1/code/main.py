@@ -115,7 +115,7 @@ def men_implies_ippon(data: dict) -> float:
     sets = apriori(df, min_support=0.01, use_colnames=True)   
     rules = association_rules(sets, metric="confidence", min_threshold=0.01).sort_values(by="support", ascending=False)
 
-    return rules.iat[0, 5]
+    return rules
 
 def slow_attacks(data: dict) -> pd.DataFrame:
     lhs = ["men_2", "kote_2", "do_2", "tsuki_2"]
@@ -147,16 +147,25 @@ def slow_attacks(data: dict) -> pd.DataFrame:
 
 def failed_slow_attacks(data: dict) -> pd.DataFrame:
     lhs = ["slow_attacks"]
-    rhs = ["failed_men_2", "failed_kote_2", "failed_do_2", "failed_tsuki_2"]
+    rhs = ["failed_men", "failed_kote", "failed_do", "failed_tsuki"]
 
     df= []
     for val in data:
         row = {
             "slow_attacks": val["seconds_between_1"] > 15 and val["seconds_between_2"] > 25,
-            "failed_men_2": bool(val["men_2"]) and not bool(val["ippon_taken_2"]),
-            "failed_kote_2": bool(val["kote_2"]) and not bool(val["ippon_taken_2"]),
-            "failed_do_2": bool(val["do_2"]) and not bool(val["ippon_taken_2"]),
-            "failed_tsuki_2": bool(val["tsuki_2"]) and not bool(val["ippon_taken_2"]),
+            "failed_men": bool(val["men_1"]) and bool(val["ippon_taken_1"]),
+            "failed_kote": bool(val["kote_1"]) and bool(val["ippon_taken_1"]),
+            "failed_do": bool(val["do_1"]) and bool(val["ippon_taken_1"]),
+            "failed_tsuki": bool(val["tsuki_1"]) and bool(val["ippon_taken_1"]),
+        }
+        df.append(row)
+
+        row = {
+            "slow_attacks": val["seconds_between_1"] > 15 and val["seconds_between_2"] > 25,
+            "failed_men": bool(val["men_2"]) and bool(val["ippon_taken_2"]),
+            "failed_kote": bool(val["kote_2"]) and bool(val["ippon_taken_2"]),
+            "failed_do": bool(val["do_2"]) and bool(val["ippon_taken_2"]),
+            "failed_tsuki": bool(val["tsuki_2"]) and bool(val["ippon_taken_2"]),
         }
         df.append(row)
 
@@ -173,30 +182,6 @@ def failed_slow_attacks(data: dict) -> pd.DataFrame:
     return rules
 
 def first_attack(data: dict) -> float:
-    lhs = ["ippon_taken_1"]
-    rhs = ["not_ippon_taken_2"]
-
-    df = []
-    for val in data:
-        row = {
-            "ippon_taken_1": bool(val["ippon_taken_1"]),
-            "not_ippon_taken_2": not bool(val["ippon_taken_2"]),
-        }
-        df.append(row)
-    
-    df = pd.DataFrame(df)
-
-    sets = apriori(df, min_support=0.01, use_colnames=True)
-    rules = association_rules(sets, metric="confidence", min_threshold=0.01)
-
-    rules = rules[
-        (rules['antecedents'].apply(lambda x: set(x) == set(lhs))) &
-        (rules['consequents'].apply(lambda x: set(x) == set(rhs)))
-    ].sort_values(by="confidence", ascending=False)
-
-    return rules.iat[0, 5]
-
-def second_attack(data: dict) -> float:
     lhs = ["not_ippon_taken_1"]
     rhs = ["ippon_taken_2"]
 
@@ -218,17 +203,18 @@ def second_attack(data: dict) -> float:
         (rules['consequents'].apply(lambda x: set(x) == set(rhs)))
     ].sort_values(by="confidence", ascending=False)
 
+    print(rules)
     return rules.iat[0, 5]
 
-def consecutive_blows(data:dict) -> float:
+def second_attack(data: dict) -> float:
     lhs = ["ippon_taken_1"]
-    rhs = ["ippon_taken_2"]
+    rhs = ["not_ippon_taken_2"]
 
     df = []
     for val in data:
         row = {
             "ippon_taken_1": bool(val["ippon_taken_1"]),
-            "ippon_taken_2": bool(val["ippon_taken_2"]),
+            "not_ippon_taken_2": not bool(val["ippon_taken_2"]),
         }
         df.append(row)
     
@@ -241,6 +227,34 @@ def consecutive_blows(data:dict) -> float:
         (rules['antecedents'].apply(lambda x: set(x) == set(lhs))) &
         (rules['consequents'].apply(lambda x: set(x) == set(rhs)))
     ].sort_values(by="confidence", ascending=False)
+
+    print(rules)
+
+    return rules.iat[0, 5]
+
+def consecutive_blows(data:dict) -> float:
+    lhs = ["not_ippon_taken_1"]
+    rhs = ["not_ippon_taken_2"]
+
+    df = []
+    for val in data:
+        row = {
+            "not_ippon_taken_1": not bool(val["ippon_taken_1"]),
+            "not_ippon_taken_2": not bool(val["ippon_taken_2"]),
+        }
+        df.append(row)
+    
+    df = pd.DataFrame(df)
+
+    sets = apriori(df, min_support=0.01, use_colnames=True)
+    rules = association_rules(sets, metric="confidence", min_threshold=0.01)
+
+    rules = rules[
+        (rules['antecedents'].apply(lambda x: set(x) == set(lhs))) &
+        (rules['consequents'].apply(lambda x: set(x) == set(rhs)))
+    ].sort_values(by="confidence", ascending=False)
+
+    print(rules)
 
     return rules.iat[0, 5]
 
